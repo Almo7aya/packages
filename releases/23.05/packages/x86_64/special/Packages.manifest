@@ -11,10 +11,10 @@ Require-User: einat:einat
 SourceDateEpoch: 1723969451
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: x86_64
-Installed-Size: 884452
+Installed-Size: 883500
 Filename: einat-ebpf_0.1.2-8_x86_64.ipk
-Size: 881355
-SHA256sum: e84293d115300c1e2b5864933a5b96da8fab050e622477b86ef3c0e89ff3f6d4
+Size: 880366
+SHA256sum: 4a3443f04ad8e23af8d40a23bd9e9e601379bc59d1c27612502b152cb2fecc07
 Description:  This eBPF application implements an "Endpoint-Independent Mapping" and
  "Endpoint-Independent Filtering" NAT(network address translation) on
  TC egress and ingress hooks.
@@ -624,10 +624,10 @@ Section: net
 SourceDateEpoch: 1724083476
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: x86_64
-Installed-Size: 3183909
+Installed-Size: 3184224
 Filename: shadowsocks-rust-ssservice_1.20.4-4_x86_64.ipk
-Size: 3148274
-SHA256sum: 084dfa425124e0dec6ec6eb0042db0aebbf170aef2060aa51b343156cdca5745
+Size: 3148936
+SHA256sum: 3738e7e9ec936f128a368ce973de92ed960c55eb5525601a122dfe0749362bc9
 Description:  shadowsocks-rust ssservice. single bundled of local,server,manager. also used to generate safed secured password.
 
 Package: shadowsocks-rust-ssurl
@@ -641,9 +641,9 @@ Section: net
 SourceDateEpoch: 1724083476
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: x86_64
-Installed-Size: 1116914
+Installed-Size: 1117465
 Filename: shadowsocks-rust-ssurl_1.20.4-4_x86_64.ipk
-Size: 1099400
-SHA256sum: 9fe8f2e0c452d5588f0c896127fa4b9901ede5f47a24f7f95b69362c10a7bf13
+Size: 1100588
+SHA256sum: fc6db4ebe98c7529b37380be68b855787b4071c2aded35d3ab0209c368c1f444
 Description:  shadowsocks-rust ssurl. for encoding/decoding SIP002 URLs.
 

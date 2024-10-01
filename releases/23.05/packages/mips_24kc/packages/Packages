@@ -355,10 +355,10 @@ License: GPL-2.0+
 Section: net
 CPE-ID: cpe:/a:qbittorrent:qbittorrent
 Architecture: mips_24kc
-Installed-Size: 7752040
+Installed-Size: 7751995
 Filename: qbittorrent_4.6.6-1_mips_24kc.ipk
-Size: 7745331
-SHA256sum: a3e97aa1892f75e01d3683c8a812e1462a591620994ffa16e1f5c477e05708d7
+Size: 7745263
+SHA256sum: 13ef3f7f357839809d956f6c266578f42a9bfc1e0d6846c84c8b05ef8f956b94
 Description:  qBittorrent is a bittorrent client programmed in C++ / Qt that uses
  libtorrent (sometimes called libtorrent-rasterbar) by Arvid Norberg.
  It aims to be a good alternative to all other bittorrent clients out
@@ -461,10 +461,10 @@ License: BSD
 Section: libs
 ABIVersion: 2.0
 Architecture: mips_24kc
-Installed-Size: 1571156
+Installed-Size: 1571012
 Filename: rblibtorrent2.0_2.0.10-1_mips_24kc.ipk
-Size: 1562117
-SHA256sum: 9f743e457cf26660b50686df00caa1ed01edb7e64b36d9bb1f0be27c6881ae52
+Size: 1561799
+SHA256sum: b52cea0c363422a8651f6c9cbcefcaba5bc34f5928dbcd335e5cd01674fc8e4c
 Description:  Rasterbar libtorrent is a C++ library that aims to be a good alternative to
  all the other bittorrent implementations around. It is a library and not a
  full featured client, although it comes with a working example client.
@@ -512,10 +512,10 @@ Depends: libc, libpthread, libstdcpp6, libopenssl3
 License: Apache-2.0
 Section: net
 Architecture: mips_24kc
-Installed-Size: 88046
+Installed-Size: 88051
 Filename: stuntman-server_1.2.17-20240806_mips_24kc.ipk
-Size: 88261
-SHA256sum: 36a3c0b67727f06024747f1996fb28bb321f187b7ee207206c87e3f61693a76f
+Size: 88268
+SHA256sum: d1409e1a254fa48916ec645dcfa476404fa9d863e182f27f970df8d807ddb926
 Description:  An open source STUN server and client code by john selbie. Compliant with the latest RFCs including 5389, 5769, and 5780. Also includes backwards compatibility for RFC 3489.
 
 Package: stuntman-testcode

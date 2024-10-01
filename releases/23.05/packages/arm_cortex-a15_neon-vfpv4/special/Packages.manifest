@@ -546,104 +546,104 @@ SHA256sum: 6efe8da5025e6495a9275b44edccdafa21e45d7e569b33d59ddc3299d029db5b
 Description:  Translation for luci-app-shadowsocks-rust - 繁體中文 (Chinese Traditional)
 
 Package: shadowsocks-rust-config
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 Source: /home/runner/work/packages/packages/packages/openwrt-shadowsocks-rust
 SourceName: shadowsocks-rust-config
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1724083476
+SourceDateEpoch: 1727453961
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: all
-Installed-Size: 277
-Filename: shadowsocks-rust-config_1.20.4-4_all.ipk
-Size: 1030
-SHA256sum: c77cc1e5d115756b9793e3de944f4cda24d51cd8ff4354a9dfe8e50d14fae6b4
+Installed-Size: 276
+Filename: shadowsocks-rust-config_1.21.0-1_all.ipk
+Size: 1028
+SHA256sum: 4e8520ef4c61db08e565837c69de00ad3c3e7cc7b789e45cacf88310b207d6c8
 Description:  shadowsocks-rust config scripts
 
 Package: shadowsocks-rust-sslocal
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 Source: /home/runner/work/packages/packages/packages/openwrt-shadowsocks-rust
 SourceName: shadowsocks-rust-sslocal
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1724083476
+SourceDateEpoch: 1727453961
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: arm_cortex-a15_neon-vfpv4
 Installed-Size: 169
-Filename: shadowsocks-rust-sslocal_1.20.4-4_arm_cortex-a15_neon-vfpv4.ipk
-Size: 989
-SHA256sum: 29de56863dcae3caf3994230cafaaf8402b59563964d4df36d3e5406306e46b8
+Filename: shadowsocks-rust-sslocal_1.21.0-1_arm_cortex-a15_neon-vfpv4.ipk
+Size: 990
+SHA256sum: 738412bdb53d9ce10a640a7065f65f1aaa1c863a75b23237f53ca4dd09229e78
 Description:  shadowsocks-rust sslocal. client provides HTTP/SOCKS proxy, port forwarding, transparent proxy and tun.
 
 Package: shadowsocks-rust-ssmanager
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 Source: /home/runner/work/packages/packages/packages/openwrt-shadowsocks-rust
 SourceName: shadowsocks-rust-ssmanager
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1724083476
+SourceDateEpoch: 1727453961
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: arm_cortex-a15_neon-vfpv4
 Installed-Size: 171
-Filename: shadowsocks-rust-ssmanager_1.20.4-4_arm_cortex-a15_neon-vfpv4.ipk
-Size: 946
-SHA256sum: 425b12044e5e72f72f16d04104e883faa975eca99730a922dc89c0ddb6904554
+Filename: shadowsocks-rust-ssmanager_1.21.0-1_arm_cortex-a15_neon-vfpv4.ipk
+Size: 939
+SHA256sum: 1736350d9b2822bda9a87259a2d1dbf7f13178fc4dd2762c1d44600fbcaf30e9
 Description:  shadowsocks-rust ssmanager. server manager.
 
 Package: shadowsocks-rust-ssserver
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 Source: /home/runner/work/packages/packages/packages/openwrt-shadowsocks-rust
 SourceName: shadowsocks-rust-ssserver
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1724083476
+SourceDateEpoch: 1727453961
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: arm_cortex-a15_neon-vfpv4
-Installed-Size: 166
-Filename: shadowsocks-rust-ssserver_1.20.4-4_arm_cortex-a15_neon-vfpv4.ipk
-Size: 931
-SHA256sum: c2a495875b9ac0e5429515dedf28143cbd723a0e67cdcd9a0b6fb72fd18c0447
+Installed-Size: 167
+Filename: shadowsocks-rust-ssserver_1.21.0-1_arm_cortex-a15_neon-vfpv4.ipk
+Size: 929
+SHA256sum: d41f69b105e732f69024f2983bea07156a5323023be18ca031e44f53b446323d
 Description:  shadowsocks-rust ssserver. 
 
 Package: shadowsocks-rust-ssservice
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc
 Source: /home/runner/work/packages/packages/packages/openwrt-shadowsocks-rust
 SourceName: shadowsocks-rust-ssservice
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1724083476
+SourceDateEpoch: 1727453961
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: arm_cortex-a15_neon-vfpv4
-Installed-Size: 2865190
-Filename: shadowsocks-rust-ssservice_1.20.4-4_arm_cortex-a15_neon-vfpv4.ipk
-Size: 2826394
-SHA256sum: d39df2f67f9ef08a901491bd3cee2f73958c0594136972cbe0be97927bc06bf5
+Installed-Size: 2863281
+Filename: shadowsocks-rust-ssservice_1.21.0-1_arm_cortex-a15_neon-vfpv4.ipk
+Size: 2825786
+SHA256sum: 4a97846bda494043313a3a32b2136e0cae3d188672f4797795db3dbe8329c461
 Description:  shadowsocks-rust ssservice. single bundled of local,server,manager. also used to generate safed secured password.
 
 Package: shadowsocks-rust-ssurl
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc
 Source: /home/runner/work/packages/packages/packages/openwrt-shadowsocks-rust
 SourceName: shadowsocks-rust-ssurl
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1724083476
+SourceDateEpoch: 1727453961
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: arm_cortex-a15_neon-vfpv4
-Installed-Size: 990527
-Filename: shadowsocks-rust-ssurl_1.20.4-4_arm_cortex-a15_neon-vfpv4.ipk
-Size: 974031
-SHA256sum: 2601a3270e45d9b1366487b9c390d636dc89585bdbe9a50991d0777648435a5a
+Installed-Size: 990809
+Filename: shadowsocks-rust-ssurl_1.21.0-1_arm_cortex-a15_neon-vfpv4.ipk
+Size: 973452
+SHA256sum: 1ac59a85e420131ebe91a3cab911c2d22111b4c26724ee709bb7f310add8638d
 Description:  shadowsocks-rust ssurl. for encoding/decoding SIP002 URLs.
 

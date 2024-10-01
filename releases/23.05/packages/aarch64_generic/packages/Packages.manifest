@@ -58,13 +58,13 @@ SourceName: fantastic-keyring
 License: MIT
 LicenseFiles: License
 Section: base
-SourceDateEpoch: 1726501043
+SourceDateEpoch: 1727775947
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: all
-Installed-Size: 309
+Installed-Size: 311
 Filename: fantastic-keyring_20240427-1_all.ipk
-Size: 1045
-SHA256sum: 73346720a6372b71eeb069f6e1faacbda5d957e12919a4abac3db727cc8b0f21
+Size: 1048
+SHA256sum: 251a003dade16c89f36eff67d237d5a0ef778041acbddc26ffbef7cb5686f32f
 Description:  The keyring of with the developer using.
 
 Package: fantastic-packages-feeds

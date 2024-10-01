@@ -434,74 +434,74 @@ SHA256sum: 6efe8da5025e6495a9275b44edccdafa21e45d7e569b33d59ddc3299d029db5b
 Description:  Translation for luci-app-shadowsocks-rust - 繁體中文 (Chinese Traditional)
 
 Package: shadowsocks-rust-config
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 License: MIT
 Section: net
 Architecture: all
-Installed-Size: 277
-Filename: shadowsocks-rust-config_1.20.4-4_all.ipk
-Size: 1030
-SHA256sum: c77cc1e5d115756b9793e3de944f4cda24d51cd8ff4354a9dfe8e50d14fae6b4
+Installed-Size: 276
+Filename: shadowsocks-rust-config_1.21.0-1_all.ipk
+Size: 1028
+SHA256sum: 4e8520ef4c61db08e565837c69de00ad3c3e7cc7b789e45cacf88310b207d6c8
 Description:  shadowsocks-rust config scripts
 
 Package: shadowsocks-rust-sslocal
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 License: MIT
 Section: net
 Architecture: mipsel_24kc
 Installed-Size: 169
-Filename: shadowsocks-rust-sslocal_1.20.4-4_mipsel_24kc.ipk
-Size: 981
-SHA256sum: 26df5c8767e5bc231cd03232fadbc47f757c904323c218bb9c069fe5d45975cf
+Filename: shadowsocks-rust-sslocal_1.21.0-1_mipsel_24kc.ipk
+Size: 979
+SHA256sum: 579c8351af0af6f177aa9515d628a8eecc97f95e4294de9291314d19c4536244
 Description:  shadowsocks-rust sslocal. client provides HTTP/SOCKS proxy, port forwarding, transparent proxy and tun.
 
 Package: shadowsocks-rust-ssmanager
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 License: MIT
 Section: net
 Architecture: mipsel_24kc
 Installed-Size: 171
-Filename: shadowsocks-rust-ssmanager_1.20.4-4_mipsel_24kc.ipk
-Size: 935
-SHA256sum: c7b5e50659b6b0ed6e9eee157966bfe36aed5246ffb2fd865ca804051e1509a8
+Filename: shadowsocks-rust-ssmanager_1.21.0-1_mipsel_24kc.ipk
+Size: 932
+SHA256sum: c64a70db5bad63bd39688af2b5324032ef73f9e4ad1be450da18af3ae284175c
 Description:  shadowsocks-rust ssmanager. server manager.
 
 Package: shadowsocks-rust-ssserver
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc, shadowsocks-rust-ssservice
 License: MIT
 Section: net
 Architecture: mipsel_24kc
-Installed-Size: 166
-Filename: shadowsocks-rust-ssserver_1.20.4-4_mipsel_24kc.ipk
-Size: 917
-SHA256sum: 0f0360ef20d9d41d17703400456ad82fb0dbdfc371998884bf4ed62abe3a5ef2
+Installed-Size: 167
+Filename: shadowsocks-rust-ssserver_1.21.0-1_mipsel_24kc.ipk
+Size: 915
+SHA256sum: 24c1be8677acf68f013e99089721f5ffe4558c2951eaa63985371f4c178cf3b1
 Description:  shadowsocks-rust ssserver. 
 
 Package: shadowsocks-rust-ssservice
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc
 License: MIT
 Section: net
 Architecture: mipsel_24kc
-Installed-Size: 3405063
-Filename: shadowsocks-rust-ssservice_1.20.4-4_mipsel_24kc.ipk
-Size: 3365229
-SHA256sum: bfbdad9c011fa274294a77e36dffaf9d8e7c753045d2533269a8521aa2d0df77
+Installed-Size: 3407729
+Filename: shadowsocks-rust-ssservice_1.21.0-1_mipsel_24kc.ipk
+Size: 3368159
+SHA256sum: 0a9ba96b6d3a2f4f61407b30eb6ffda96c44b9391562fd79c5c09434e5f56a58
 Description:  shadowsocks-rust ssservice. single bundled of local,server,manager. also used to generate safed secured password.
 
 Package: shadowsocks-rust-ssurl
-Version: 1.20.4-4
+Version: 1.21.0-1
 Depends: libc
 License: MIT
 Section: net
 Architecture: mipsel_24kc
-Installed-Size: 1190303
-Filename: shadowsocks-rust-ssurl_1.20.4-4_mipsel_24kc.ipk
-Size: 1173121
-SHA256sum: 0d9a19c4f7cb510a7953aa4c3f4ef181f7d34f63608ae62f2776c5a58d57e9a2
+Installed-Size: 1190197
+Filename: shadowsocks-rust-ssurl_1.21.0-1_mipsel_24kc.ipk
+Size: 1173203
+SHA256sum: b9c65b93f7694fb42f1d5c66b31fd5b00d864c4db53a97bf911175044133fa84
 Description:  shadowsocks-rust ssurl. for encoding/decoding SIP002 URLs.
 

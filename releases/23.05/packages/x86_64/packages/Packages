@@ -40,10 +40,10 @@ Depends: libc
 License: MIT
 Section: base
 Architecture: all
-Installed-Size: 311
+Installed-Size: 312
 Filename: fantastic-keyring_20240427-1_all.ipk
-Size: 1048
-SHA256sum: 251a003dade16c89f36eff67d237d5a0ef778041acbddc26ffbef7cb5686f32f
+Size: 1050
+SHA256sum: 4612eace4badefae2b02baabc5263bf33fbc4ed4befb4e3a249d9b3703063198
 Description:  The keyring of with the developer using.
 
 Package: fantastic-packages-feeds
@@ -54,8 +54,8 @@ Section: base
 Architecture: all
 Installed-Size: 96
 Filename: fantastic-packages-feeds_20240504-1_all.ipk
-Size: 1506
-SHA256sum: 3a5e96ef8e18c306ec833f77c4747febfa49bb686e62991ddf760c017dbd5246
+Size: 1508
+SHA256sum: 72bfed3c61b06047b6bbbfafdfe24ceb4b5701f8727d81ada9ecc86bf6be7946
 Description:  Installer for fantastic-packages feeds
 
 Package: go-stun
@@ -217,6 +217,18 @@ Size: 64761
 SHA256sum: 08e369ecaba391e8811d82a501927e40305d91b4b0a6b5bbdfefbe6220d5788f
 Description:  This package provides the Qt6 Xml v6.7.2 library.
 
+Package: mihomo
+Version: 1.18.8-1
+Depends: libc
+License: GPL-2.0
+Section: net
+Architecture: x86_64
+Installed-Size: 11999550
+Filename: mihomo_1.18.8-1_x86_64.ipk
+Size: 11964338
+SHA256sum: dcc8392b42e926124faef5f7d85bf57d3654de48e44f9e7c55753183aaa08ad1
+Description:  Another Mihomo Kernel.
+
 Package: natmapt-client-script-deluge
 Version: 20240603
 Depends: libc, natmapt
@@ -343,8 +355,8 @@ Section: net
 Architecture: all
 Installed-Size: 366
 Filename: plain-nginx_20231028_all.ipk
-Size: 1162
-SHA256sum: 61ab656c9676bd111541efac6a446c8f506d18592a5abb81bc18a802f1338485
+Size: 1165
+SHA256sum: adb19beb2ca7954eaf89cee0219025f8b6743d75d0345a910dab3dee6bb2ff78
 Description:  Read text document directly
 
 Package: qbittorrent
@@ -541,4 +553,6 @@ Filename: uci-alwaysonline_20240731_x86_64.ipk
 Size: 3366
 SHA256sum: 5a3d0a12681eeb2b15a98776ce73e2b3b9993f1fe22fd8feb2a3c15ae4b813a3
 Description:  alwaysonline uci metapackage
+
+
 

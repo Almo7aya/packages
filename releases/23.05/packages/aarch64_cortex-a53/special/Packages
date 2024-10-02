@@ -5,10 +5,10 @@ Provides: einat
 License: GPL-2.0-or-later GPL-2.0-only
 Section: net
 Architecture: aarch64_cortex-a53
-Installed-Size: 868766
+Installed-Size: 869632
 Filename: einat-ebpf_0.1.2-8_aarch64_cortex-a53.ipk
-Size: 864713
-SHA256sum: 6ed2f954e4333b8a2ed6e14f038dfea6a311788916e9f87a9fd9eac09f9d4026
+Size: 865226
+SHA256sum: 7e2bc0d5214a71ca0b81952a366d09ecd7e470d754407a6fc883c701b329096c
 Description:  This eBPF application implements an "Endpoint-Independent Mapping" and
  "Endpoint-Independent Filtering" NAT(network address translation) on
  TC egress and ingress hooks.
@@ -487,10 +487,10 @@ Depends: libc
 License: MIT
 Section: net
 Architecture: aarch64_cortex-a53
-Installed-Size: 3060955
+Installed-Size: 3061062
 Filename: shadowsocks-rust-ssservice_1.21.0-1_aarch64_cortex-a53.ipk
-Size: 3012887
-SHA256sum: b5dbfda82bd72f3e3548c3b2d5a6e167143a6f2dd9df6eae7bef649213acd61e
+Size: 3017049
+SHA256sum: 372b368dd0b8bc96d885e6d609120557c5771f84150cb99be3fba8114edc59c2
 Description:  shadowsocks-rust ssservice. single bundled of local,server,manager. also used to generate safed secured password.
 
 Package: shadowsocks-rust-ssurl
@@ -499,9 +499,9 @@ Depends: libc
 License: MIT
 Section: net
 Architecture: aarch64_cortex-a53
-Installed-Size: 1063132
+Installed-Size: 1063609
 Filename: shadowsocks-rust-ssurl_1.21.0-1_aarch64_cortex-a53.ipk
-Size: 1043686
-SHA256sum: c29e7403cbc9616b6d792640b45e070403f8ce2f405553e9b729a4c48a0f1494
+Size: 1044025
+SHA256sum: 1d34de7eec6bbe584df18b726201094c6dafb3ce7722b31a388cfcc0a42702bf
 Description:  shadowsocks-rust ssurl. for encoding/decoding SIP002 URLs.
 

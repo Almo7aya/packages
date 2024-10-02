@@ -487,10 +487,10 @@ Depends: libc
 License: MIT
 Section: net
 Architecture: mipsel_24kc
-Installed-Size: 3414107
+Installed-Size: 3414114
 Filename: shadowsocks-rust-ssservice_1.21.0-1_mipsel_24kc.ipk
-Size: 3374804
-SHA256sum: d55d8c5a60cd8fe107fb1a87895c3c993157d02e13ea9f3bd514de88a9e0805c
+Size: 3374819
+SHA256sum: f7b98cabfa4012c2ac9cf6b602ca93d9e5fc7129152b3fb5fe1952475801c194
 Description:  shadowsocks-rust ssservice. single bundled of local,server,manager. also used to generate safed secured password.
 
 Package: shadowsocks-rust-ssurl

@@ -40,10 +40,10 @@ Depends: libc
 License: MIT
 Section: base
 Architecture: all
-Installed-Size: 312
+Installed-Size: 310
 Filename: fantastic-keyring_20240427-1_all.ipk
-Size: 1050
-SHA256sum: 4612eace4badefae2b02baabc5263bf33fbc4ed4befb4e3a249d9b3703063198
+Size: 1049
+SHA256sum: 54a1c94d159a936679f5ed7095b9e8b089282c0efebc079ad8e2c63ec8b86328
 Description:  The keyring of with the developer using.
 
 Package: fantastic-packages-feeds
@@ -52,10 +52,10 @@ Depends: libc, fantastic-keyring, opkg
 License: MIT
 Section: base
 Architecture: all
-Installed-Size: 96
+Installed-Size: 95
 Filename: fantastic-packages-feeds_20240504-1_all.ipk
-Size: 1508
-SHA256sum: 72bfed3c61b06047b6bbbfafdfe24ceb4b5701f8727d81ada9ecc86bf6be7946
+Size: 1505
+SHA256sum: b6f095f1c4d0e61833caf8f933364b507e64a98de650c718d0d93208309cad34
 Description:  Installer for fantastic-packages feeds
 
 Package: go-stun
@@ -223,10 +223,10 @@ Depends: libc
 License: GPL-2.0
 Section: net
 Architecture: mipsel_24kc
-Installed-Size: 10644063
+Installed-Size: 10643952
 Filename: mihomo_1.18.8-1_mipsel_24kc.ipk
-Size: 10619552
-SHA256sum: 52274e1fa85abf7d36622ad80f4940c865af9b098762035479e9a14ab5d29ab4
+Size: 10618795
+SHA256sum: b91f28b29e0175e94fc07fd9ca9f32f776be30d9fe6275ff6e83615f584db967
 Description:  Another Mihomo Kernel.
 
 Package: natmapt-client-script-deluge
@@ -353,10 +353,10 @@ Depends: libc, luci-nginx
 License: MIT
 Section: net
 Architecture: all
-Installed-Size: 366
+Installed-Size: 367
 Filename: plain-nginx_20231028_all.ipk
-Size: 1165
-SHA256sum: adb19beb2ca7954eaf89cee0219025f8b6743d75d0345a910dab3dee6bb2ff78
+Size: 1163
+SHA256sum: 2e9762aaae8e0a0e1771445ca9393e7760fb1841fc51a3dd00993b237984127f
 Description:  Read text document directly
 
 Package: qbittorrent

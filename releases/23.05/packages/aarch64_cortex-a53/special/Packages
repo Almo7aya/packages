@@ -487,10 +487,10 @@ Depends: libc
 License: MIT
 Section: net
 Architecture: aarch64_cortex-a53
-Installed-Size: 3061062
+Installed-Size: 3061060
 Filename: shadowsocks-rust-ssservice_1.21.0-1_aarch64_cortex-a53.ipk
-Size: 3017049
-SHA256sum: 372b368dd0b8bc96d885e6d609120557c5771f84150cb99be3fba8114edc59c2
+Size: 3017180
+SHA256sum: 838dffd815fef1299d3015302fb5bdca6453d268004a8d0a0091e61c768f7ef4
 Description:  shadowsocks-rust ssservice. single bundled of local,server,manager. also used to generate safed secured password.
 
 Package: shadowsocks-rust-ssurl

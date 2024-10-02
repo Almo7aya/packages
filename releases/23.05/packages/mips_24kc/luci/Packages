@@ -116,14 +116,14 @@ SHA256sum: d2796da708a9c6fa4a8b12a1cae519cb0ed8427ca35ff54a3863271443c8eb18
 Description:  eBPF-based Endpoint-Independent NAT
 
 Package: luci-app-fchomo
-Version: git-24.276.14810-fa4a56d
+Version: git-24.276.23936-040ebad
 Depends: libc, mihomo, ca-bundle, firewall4, kmod-nft-tproxy, yq
 Section: luci
 Architecture: all
-Installed-Size: 30592
-Filename: luci-app-fchomo_git-24.276.14810-fa4a56d_all.ipk
-Size: 31539
-SHA256sum: 2bf43dab8675564b92a16443f46ade58de6484f041d06df08f38bac058e6a71f
+Installed-Size: 195671
+Filename: luci-app-fchomo_git-24.276.23936-040ebad_all.ipk
+Size: 196737
+SHA256sum: d205d8e4f819d58c1a8d0326abe39825b8fe997401edb5e60736ef15c3728fbd
 Description:  FullCombo Mihomo supplies maximum customization on OpenWrt.
 
 Package: luci-app-homeproxy
@@ -291,10 +291,10 @@ Depends: libc, luci-app-xray, wget
 License: MPLv2
 Section: Custom
 Architecture: all
-Installed-Size: 3375
+Installed-Size: 3374
 Filename: luci-app-xray-status_3.4.1-1_all.ipk
-Size: 4152
-SHA256sum: 3314bb25e30511690b2da42a77ca0c9fd26cedff96c905c812f2c53f5b869292
+Size: 4150
+SHA256sum: 1d043d666f544d752c6e29bd1d1fd7f6b25f28b1b304a35abf2a82e23f2eb708
 Description:  LuCI Support for Xray (Client-side Rendered) (status page).
 
 Package: luci-app-xray

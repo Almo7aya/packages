@@ -59,15 +59,26 @@ jobs:
       contents: write  # To push a branch
     strategy:
       matrix:
-        version: [23.05.3]
+        version: [23.05.4]
         arch: [
-            aarch64_cortex-a72
-        ]
-        include:
+          x86_64,
+          aarch64_cortex-a53,
+          aarch64_generic,
+          aarch64_cortex-a72
+          ]
+          include:
           - usign_id: ${{ vars.USIGN_ID }}
           - gpg_id: ${{ vars.GPG_ID }}
           - release_path: 'releases'
           - no_img: true
+          - arch: x86_64
+            target: ['x86', '64'] # for imagebuilder
+            profile: generic # for imagebuilder
+            no_img: false
+          - arch: aarch64_cortex-a53
+            target: ['mvebu', 'cortexa53']
+          - arch: aarch64_generic
+            target: ['armsr', 'armv8']
           - arch: aarch64_cortex-a72
             target: ['bcm27xx', 'bcm2711']
     uses: ./.github/workflows/compile.yml

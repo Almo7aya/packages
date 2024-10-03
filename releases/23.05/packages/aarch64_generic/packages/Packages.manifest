@@ -58,13 +58,13 @@ SourceName: fantastic-keyring
 License: MIT
 LicenseFiles: License
 Section: base
-SourceDateEpoch: 1727851224
+SourceDateEpoch: 1727920610
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: all
 Installed-Size: 310
 Filename: fantastic-keyring_20240427-1_all.ipk
-Size: 1049
-SHA256sum: 54a1c94d159a936679f5ed7095b9e8b089282c0efebc079ad8e2c63ec8b86328
+Size: 1050
+SHA256sum: 52d485d1bf3cf710d1c1c3ba5b5e6f8efb799152b5445d6f9889b74f93edc580
 Description:  The keyring of with the developer using.
 
 Package: fantastic-packages-feeds
@@ -75,13 +75,13 @@ SourceName: fantastic-packages-feeds
 License: MIT
 LicenseFiles: License
 Section: base
-SourceDateEpoch: 1727851224
+SourceDateEpoch: 1727920610
 Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: all
-Installed-Size: 95
+Installed-Size: 97
 Filename: fantastic-packages-feeds_20240504-1_all.ipk
-Size: 1505
-SHA256sum: b6f095f1c4d0e61833caf8f933364b507e64a98de650c718d0d93208309cad34
+Size: 1507
+SHA256sum: 3c12a84ee78d4b1907f54df468c637822f91127f7e0c62d0b7e4bc7eeefa9085
 Description:  Installer for fantastic-packages feeds
 
 Package: go-stun
@@ -304,8 +304,8 @@ Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: aarch64_generic
 Installed-Size: 11020619
 Filename: mihomo_1.18.8-1_aarch64_generic.ipk
-Size: 10982586
-SHA256sum: e48de4d57b73f92cb1d5e92d412c45519207f81b57422caa74987f084e63be6c
+Size: 10982698
+SHA256sum: f7de391d4810b6828d833605576abc31f093a28f4288db85b29971e8bbef4116
 Description:  Another Mihomo Kernel.
 
 Package: natmapt-client-script-deluge
@@ -479,13 +479,13 @@ SourceName: plain-nginx
 License: MIT
 LicenseFiles: LICENSE
 Section: net
-SourceDateEpoch: 1727851224
+SourceDateEpoch: 1727920610
 Maintainer: muink <hukk1996@gmail.com>
 Architecture: all
-Installed-Size: 367
+Installed-Size: 368
 Filename: plain-nginx_20231028_all.ipk
-Size: 1163
-SHA256sum: 2e9762aaae8e0a0e1771445ca9393e7760fb1841fc51a3dd00993b237984127f
+Size: 1167
+SHA256sum: 0984ac696dcd79bee2d9ecd816a7f848eff3b3441bca10e705cdd6038d1952bd
 Description:  Read text document directly
 
 Package: qbittorrent

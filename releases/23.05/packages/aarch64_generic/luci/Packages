@@ -293,8 +293,8 @@ Section: Custom
 Architecture: all
 Installed-Size: 3375
 Filename: luci-app-xray-status_3.4.1-1_all.ipk
-Size: 4152
-SHA256sum: 8765d57ca380bf4b2cdc72826ae8b3097235b25c0741916360f67e5d18c3cbed
+Size: 4150
+SHA256sum: a1d6ad19440b894af67db05db8fc08650245ca7da6f5cfa868c8b5baeadc1f48
 Description:  LuCI Support for Xray (Client-side Rendered) (status page).
 
 Package: luci-app-xray

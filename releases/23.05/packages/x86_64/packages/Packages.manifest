@@ -304,8 +304,8 @@ Maintainer: Anya Lin <hukk1996@gmail.com>
 Architecture: x86_64
 Installed-Size: 11999487
 Filename: mihomo_1.18.8-1_x86_64.ipk
-Size: 11964463
-SHA256sum: 8de1b92b89e11934f88bd47e9c4503e53d1b8171e2900ceee788898c94c995f6
+Size: 11964457
+SHA256sum: 9e32c4c6ece1e76bd8278926158eca531d5b108ea454ba1c0aa7f4da5b2592d6
 Description:  Another Mihomo Kernel.
 
 Package: natmapt-client-script-deluge

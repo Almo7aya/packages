@@ -3,28 +3,22 @@ name: Compile packages and Build images
 on:
   workflow_call:
     inputs:
-      build_mode:
-        required: false
-        type: string
       compiles:
         required: false
         type: string
-      no_img:
-        required: false
-        type: boolean
-      TPATH:
+      GHPAGES_PATH:
         required: true
         type: string
-      VERSION:
+      OP_VERSION:
         required: true
         type: string
-      TARGET:
+      BOARD:
         required: false
         type: string
       SUBTARGET:
         required: false
         type: string
-      PROFILE:
+      MODEL:
         required: false
         type: string
       ARCH:
@@ -50,17 +44,13 @@ env:
 
 jobs:
   compile:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: write  # To push a branch
       # pull-requests: write  # To create a PR from that branch
     env:
-      TPATH: ${{ inputs.TPATH }}
-      VERSION: ${{ inputs.VERSION }}
-      TARGET: ${{ inputs.TARGET }}
-      SUBTARGET: ${{ inputs.SUBTARGET }}
-      PROFILE: ${{ inputs.PROFILE }}
-      ARCH: ${{ inputs.ARCH }}
+      MIRROR_URL: 'https://downloads.openwrt.org'
+      OP_VERSION: ${{ inputs.OP_VERSION }}
       USIGN_ID: ${{ inputs.USIGN_ID }}
       USIGN_KEY: ${{ secrets[format('USIGN_{0}', inputs.USIGN_ID )] }}
       USIGN_PUBKEY: ${{ vars[format('USIGN_PUB_{0}', inputs.USIGN_ID )] }}
@@ -70,9 +60,27 @@ jobs:
       GPG_KEY: ${{ secrets[format('GPG_{0}', inputs.GPG_ID )] }}
       GPG_PUBKEY: ${{ vars[format('GPG_PUB_{0}', inputs.GPG_ID )] }}
       GPG_FINGER: ${{ vars[format('GPG_FING_{0}', inputs.GPG_ID )] }}
-      PREFIX: fantasticpackages_
+      FTSPKGPREFIX: fantasticpackages_
 
     steps:
+      - name: Get system info
+        uses: kenchan0130/actions-system-info@master
+        id: system-info
+      - name: Print system info
+        shell: bash
+        run: |
+          cat <<- EOF
+          CPU Core: ${{ steps.system-info.outputs.cpu-core }}
+          CPU Model: ${{ steps.system-info.outputs.cpu-model }}
+          Hostname: ${{ steps.system-info.outputs.hostname }}
+          Kernel release: ${{ steps.system-info.outputs.kernel-release }}
+          Kernel version: ${{ steps.system-info.outputs.kernel-version }}
+          Name: ${{ steps.system-info.outputs.name }}
+          Platform: ${{ steps.system-info.outputs.platform }}
+          Release: ${{ steps.system-info.outputs.release }}
+          Total memory: $[ ${{ steps.system-info.outputs.totalmem }} / 1024**3 ] GB
+          EOF
+
       - name: Maximize Build Space
         if: env.DELETE_USELESS_FILES == 'true' && !cancelled()
         uses: easimon/maximize-build-space@master
@@ -83,19 +91,17 @@ jobs:
           remove-android: 'true'
           remove-haskell: 'true'
 
-      - name: Initialize Environment
-        env:
-          DEBIAN_FRONTEND: noninteractive
+      - name: Determine branch name and Generate op_target_url_prefix
         run: |
-          sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
-          mkdir -p "/workdir/DL"
-
-      - name: Determine branch name
-        run: |
-          BRANCH="${VERSION%.*}"
+          SNAPSHOTS=$(echo "$OP_VERSION" | grep -q SNAPSHOT && { [ "$OP_VERSION" = "SNAPSHOT" ] && echo y || echo i; } || echo )
+          echo "SNAPSHOTS=$SNAPSHOTS" >> $GITHUB_ENV
+          SNAPSHOTS_BRANCH="$(echo "$OP_VERSION" | sed -En 's|^(.+)-SNAPSHOT$|\1|p')"
+          echo "SNAPSHOTS_BRANCH=$SNAPSHOTS_BRANCH" >> $GITHUB_ENV
+          BRANCH="$([ -n "$SNAPSHOTS_BRANCH" ] && echo "$SNAPSHOTS_BRANCH" || echo "${OP_VERSION%.*}")"
           echo "Building for $BRANCH"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          op_target_url_prefix="$MIRROR_URL/$([ -n "$SNAPSHOTS" ] && echo snapshots || echo "releases/$OP_VERSION")/targets/${{ inputs.board }}/${{ inputs.subtarget}}"
+          echo "op_target_url_prefix=$op_target_url_prefix" >> $GITHUB_ENV
 
       - name: Check ${{ env.BRANCH }} if deployed
         run: |
@@ -116,46 +122,101 @@ jobs:
           lfs: true
           submodules: true
 
-      - name: Import keys
+      - name: Initialize Working environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir
+          mkdir -p "/workdir/bin"
+          mkdir -p "/workdir/FEEDS/$BRANCH"
+          mkdir -p "/workdir/DL"
+
+      - name: Cache FEED
+        if: env.CACHE_DOWNLOAD == 'true' && !cancelled()
+        uses: actions/cache@v4
+        with:
+          path: /workdir/FEEDS/${{ env.BRANCH }}
+          key: Cache-FEEDS-${{ env.BRANCH }}-${{ hashFiles('**/Makefile') }}
+          restore-keys: |
+            Cache-FEEDS-${{ env.BRANCH }}-
+
+      - name: Remove ${{ env.FTSPKGPREFIX }}* FEED
+        if: env.CACHE_DOWNLOAD == 'true' && !cancelled()
         shell: bash
         run: |
-          # usign
-          #EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          #echo "USIGN_PUBKEY<<$EOF" >> $GITHUB_ENV
-          #cat $GITHUB_WORKSPACE/keys/usign/${USIGN_ID}.pub >> $GITHUB_ENV
-          #echo "$EOF" >> $GITHUB_ENV
-          # gpg
-          gpg --batch --pinentry-mode=loopback --yes --passphrase "$(echo -n "${GPG_PW}")" --import <(echo "${GPG_KEY}")
-          gpg --import-ownertrust <<< "${GPG_FINGER//[[:space:]]/}:6:"
+          echo "rm -rf /workdir/FEEDS/$BRANCH/${FTSPKGPREFIX}* 2>/dev/null"
+          sudo rm -rf /workdir/FEEDS/$BRANCH/${FTSPKGPREFIX}* 2>/dev/null
 
       - name: Cache DL dependencies
-        if: env.CACHE_DOWNLOAD == 'true' && (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_pkgs') && !cancelled()
+        if: env.CACHE_DOWNLOAD == 'true' && !cancelled()
         uses: actions/cache@v4
         with:
           path: /workdir/DL
-          key: ${{ runner.os }}-OpenWRT-SDK-DL-Cache-Makefile-${{ hashFiles('**/Makefile') }}
+          key: Cache-DL-${{ env.BRANCH }}-${{ hashFiles('**/Makefile') }}
           #key: ${{ runner.os }}-DL-${{ github.ref_name }}-${{ hashFiles('Makefile') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-OpenWRT-SDK-DL-Cache-Makefile-
+            Cache-DL-${{ env.BRANCH }}-
           #restore-keys: |
           #  ${{ runner.os }}-DL-${{ github.ref_name }}-${{ hashFiles('Makefile') }}-
           #  ${{ runner.os }}-DL-${{ github.ref_name }}-
 
+      - name: Download ghost-dl
+        if: env.CACHE_DOWNLOAD == 'true' && !cancelled()
+        shell: bash
+        run: |
+          wget -q "https://codeload.github.com/fantastic-packages/ghost-dl/zip/refs/heads/$BRANCH" -O ghost-dl.zip \
+          && unzip -o ghost-dl.zip \
+          && cp -rf ghost-dl-*/* /workdir/DL/ \
+          && rm -rf ghost-dl.zip ghost-dl-* \
+          || echo "ghost-dl download failed"
+
+      - name: Display structure of Cache files
+        if: env.CACHE_DOWNLOAD == 'true' && !cancelled()
+        shell: bash
+        run: |
+          group() {
+            endgroup
+            echo "::group::  $1"
+            GROUP=1
+          }
+          endgroup() {
+            if [ -n "$GROUP" ]; then
+              echo "::endgroup::"
+            fi
+            GROUP=
+          }
+          trap 'endgroup' ERR
+          #
+          group "find /workdir/FEEDS -maxdepth 2"
+          sudo find /workdir/FEEDS -maxdepth 2
+          endgroup
+          #
+          group "find /workdir/DL -maxdepth 3"
+          sudo find /workdir/DL -maxdepth 3
+          endgroup
+
+      - name: Import keys
+        shell: bash
+        run: |
+          # gpg
+          gpg --batch --pinentry-mode=loopback --yes --passphrase "$(echo -n "${GPG_PW}")" --import <(echo "${GPG_KEY}")
+          gpg --import-ownertrust <<< "${GPG_FINGER//[[:space:]]/}:6:"
+
       - name: Determine EXTRA_FEEDS and PACKAGES
-        if: (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_pkgs') && !cancelled()
         shell: bash
         env:
           EXTRA_FEEDS: >-
-            src-link|${{ env.PREFIX }}packages|/feed/feeds/packages/
-            src-link|${{ env.PREFIX }}luci|/feed/feeds/luci/
+            src-link|${{ env.FTSPKGPREFIX }}packages|/feed/feeds/packages/
+            src-link|${{ env.FTSPKGPREFIX }}luci|/feed/feeds/luci/
           SPECIAL_FEEDS: >-
-            src-link|${{ env.PREFIX }}special|${{ github.workspace }}/feeds/special/
+            src-link|${{ env.FTSPKGPREFIX }}special|${{ github.workspace }}/feeds/special/
         run: |
           # EXTRA_FEEDS
-          echo "Feeds $EXTRA_FEEDS"
+          echo "Feeds: $EXTRA_FEEDS"
           echo "EXTRA_FEEDS=$EXTRA_FEEDS" >> $GITHUB_ENV
           # SPECIAL_FEEDS
-          echo "SpecFeeds $SPECIAL_FEEDS"
+          echo "SpecFeeds: $SPECIAL_FEEDS"
           echo "SPECIAL_FEEDS=$SPECIAL_FEEDS" >> $GITHUB_ENV
           # PACKAGES and SPECIALS
           _packages="$(ls -1 $GITHUB_WORKSPACE/feeds/packages/ | tr '\n' ' ')"
@@ -171,32 +232,34 @@ jobs:
               || _manual="${_manual:+$_manual }$_p"
           done
           PACKAGES="${_manual:-$([ -n "$_specmanual" ] && echo fantastic-keyring || echo $_all)}"
-          echo "Building $PACKAGES"
+          echo "Building: $PACKAGES"
           echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
           SPECIALS="${_specmanual:-$([ -n "$_manual" ] && echo '' || echo $_special)}"
-          echo "SpecBuilding $SPECIALS"
+          echo "SpecBuilding: $SPECIALS"
           echo "SPECIALS=$SPECIALS" >> $GITHUB_ENV
 
       - name: Checkout Releases
         id: checkout_releases
         env:
+          RELEASES_PUSH_KEY: ${{ secrets.RELEASES_PUSH }}
           Branch: gh-pages
         shell: bash
         run: |
-          git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin $Branch
-          git checkout origin/$Branch -- $TPATH/$BRANCH/packages/$ARCH/ 2>/dev/null || echo
-          echo "mv $TPATH/$BRANCH/packages/$ARCH/<feeds> to /workdir/bin/packages/$ARCH/${PREFIX}<feeds>"
-          mkdir -p "/workdir/bin/packages/$ARCH" 2>/dev/null
-          if [ -d "$TPATH/$BRANCH/packages/$ARCH" ]; then
-            pushd $TPATH/$BRANCH/packages/$ARCH
-            find * -maxdepth 0 -type d 2>/dev/null | xargs -I{} mv "{}" "/workdir/bin/packages/$ARCH/${PREFIX}{}"
+          sudo apt update
+          sudo apt -y install axel
+          axel -q -n8 -o releases.tgz "https://codeload.github.com/$GITHUB_REPOSITORY_OWNER/releases/tar.gz/refs/heads/$Branch"
+          tar -xzf releases.tgz releases-$Branch/$BRANCH/packages/${{ inputs.ARCH }}/ && mv releases-$Branch ${{ inputs.GHPAGES_PATH }} || echo
+          echo "mv ${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/<feeds> to /workdir/bin/packages/${{ inputs.ARCH }}/${FTSPKGPREFIX}<feeds>"
+          mkdir -p "/workdir/bin/packages/${{ inputs.ARCH }}" 2>/dev/null
+          if [ -d "${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}" ]; then
+            pushd ${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}
+            find * -maxdepth 0 -type d 2>/dev/null | xargs -I{} mv "{}" "/workdir/bin/packages/${{ inputs.ARCH }}/${FTSPKGPREFIX}{}"
             popd
           fi
 
       - name: Build Specials
         id: build_specials
         shell: bash
-        if: (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_pkgs') && !cancelled()
         run: |
           grep -q '^\s*$' <<< "$SPECIALS" && exit 0
           group() {
@@ -212,32 +275,45 @@ jobs:
           }
           trap 'endgroup' ERR
           #
+          group "echo start"
+          echo start
+          endgroup
+          #
           group "Initialize Environment"
           sudo apt update
-          sudo apt -y install axel build-essential ccache clang curl flex bison g++ gawk \
+          sudo apt -y install jq axel build-essential ccache clang curl flex bison g++ gawk \
           gcc-multilib g++-multilib genisoimage gettext git libdw-dev libelf-dev \
           libncurses5-dev libssl-dev locales pv pwgen python3 python3-pip \
           python3-setuptools qemu-utils rsync signify-openbsd subversion swig unzip \
-          zlib1g-dev file wget zstd
+          zlib1g-dev file wget zstd python3-venv python3-pyelftools python3-cryptography \
+          clang llvm libbpf-dev pkg-config libdw-dev libelf-dev zlib1g-dev
           endgroup
-          #
+          # pushd SPECIAL_WORKDIR
           mkdir -p SPECIAL_WORKDIR
           pushd SPECIAL_WORKDIR
           #
-          group "Initialize SDK"
-          # Download SDK
-          op_target_url_prefix="https://downloads.openwrt.org/releases/$VERSION/targets/$TARGET/$SUBTARGET"
+          group "Download SDK"
           sha256sums="$(curl -L "${op_target_url_prefix}/sha256sums")"
           sdk="$(sed -n '/\bsdk\b/{s|^[[:xdigit:]]*\s*\*||;p}' <<< "$sha256sums")"
-          axel -n8 "${op_target_url_prefix}/${sdk}"
-          tar -xf "$sdk" && rm -f "$sdk"
+          axel -q -n8 "${op_target_url_prefix}/${sdk}"
+          tar $(echo "$sdk" | grep -qE '\.tar\.zst$' && echo '-I zstd') -xf "$sdk" && rm -f "$sdk"
           mv *-sdk-* SDK
+          endgroup
+          #
+          group "Initialize SDK"
           # bin
           ln -s "/workdir/bin" SDK/bin
+          # feeds
+          ln -s "/workdir/FEEDS/$BRANCH" SDK/feeds
           # dl
           rm -rf SDK/dl
           ln -s "/workdir/DL" SDK/dl
           # feeds.conf.default
+          sed -i \
+            -e 's,https://git.openwrt.org/feed/,https://github.com/openwrt/,' \
+            -e 's,https://git.openwrt.org/openwrt/,https://github.com/openwrt/,' \
+            -e 's,https://git.openwrt.org/project/,https://github.com/openwrt/,' \
+            SDK/feeds.conf.default
           for SPECIAL_FEED in $SPECIAL_FEEDS; do
             tr '|' ' ' <<< "$SPECIAL_FEED" >> SDK/feeds.conf.default
           done
@@ -251,7 +327,9 @@ jobs:
           pushd SDK
           #
           group "scripts/feeds update -a"
-          scripts/feeds update -a
+          error=1 && until [ $error = 0 ]; do
+            scripts/feeds update -a && error=0 || error=$?
+          done
           endgroup
           #
           group "scripts/feeds install $SPECIALS"
@@ -263,13 +341,12 @@ jobs:
           endgroup
           #
           group "make package/*/compile V=s -j$NPROC"
-          make package/compile V=s -j$NPROC
           for PKG in $SPECIALS; do
             make "package/$PKG/compile" \
-              BUILD_LOG="$BUILD_LOG" \
+              BUILD_LOG=y \
               IGNORE_ERRORS="$IGNORE_ERRORS" \
               CONFIG_AUTOREMOVE=y \
-              V=s \
+              V="$V" \
               -j$NPROC
           done
           endgroup
@@ -282,14 +359,25 @@ jobs:
           # popd SPECIAL_WORKDIR
           popd
 
+      #- name: Setup tmate session
+      #  if: ${{ failure() && steps.build_specials.conclusion == 'failure' }}
+      #  uses: mxschmitt/action-tmate@v3
+
+      - name: Upload Specials Logs
+        if: ${{ failure() && steps.build_specials.conclusion == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Specials-logs-${{ env.OP_VERSION }}-${{ inputs.ARCH }}-${{ inputs.BOARD }}-${{ inputs.SUBTARGET }}-${{ inputs.MODEL }}-${{ hashFiles('**/Makefile') }}
+          path: ${{ github.workspace }}/SPECIAL_WORKDIR/SDK/logs
+
       - name: Build Packages
         id: build_packags
-        if: (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_pkgs') && !cancelled()
-        uses: fantastic-packages/gh-action-sdk@master
+        uses: fantastic-packages/gh-action-sdk@24.10
         env:
-          #ARCH: ${{ env.ARCH }}-${{ env.VERSION }}
-          ARCH: ${{ env.ARCH }}-${{ env.BRANCH }}-SNAPSHOT
+          #ARCH: ${{ inputs.ARCH }}-${{ env.OP_VERSION }}
+          ARCH: ${{ inputs.ARCH }}-${{ env.SNAPSHOTS != 'y' && format('{0}-', env.BRANCH) || '' }}SNAPSHOT
           ARTIFACTS_DIR: /workdir
+          FEEDS_DIR: /workdir/FEEDS/$BRANCH
           DL_DIR: /workdir/DL
           FEED_DIR: ${{ github.workspace }}
           EXTRA_FEEDS: ${{ env.EXTRA_FEEDS }}
@@ -298,12 +386,18 @@ jobs:
           PACKAGES: ${{ env.PACKAGES }}
           INDEX: 1
           KEY_BUILD: ${{ env.USIGN_KEY }}
-          V: 99
+          #V: s
+
+      - name: Upload error logs
+        if: ${{ failure() && steps.build_packags.conclusion == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-logs-${{ env.OP_VERSION }}-${{ inputs.ARCH }}-${{ inputs.BOARD }}-${{ inputs.SUBTARGET }}-${{ inputs.MODEL }}-${{ hashFiles('**/Makefile') }}
+          path: /workdir/logs
 
       - name: Checkout Packages
         id: checkout_packags
         shell: bash
-        if: (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_pkgs') && !cancelled()
         run: |
           sign_packages() {
             # gpg
@@ -311,24 +405,29 @@ jobs:
               gpg -u ${GPG_ID} --batch --pinentry-mode=loopback --yes --passphrase "$(echo -n "${GPG_PW}")" -a -o Packages.asc --detach-sign Packages
             fi
           }
+          # clean old apk
+          clean_old_apk() {
+            local rmlist=$(ls -1 *.ipk | grep -Ev "^($(jq -rc '.packages|to_entries[]|"\(.key)_\(.value)"' index.json | tr '\n' '|' | sed 's,|$,,'))")
+            [ -z "$rmlist" ] || rm -f $rmlist
+          }
           #
-          mkdir -p "$GITHUB_WORKSPACE/$TPATH" 2>/dev/null
+          mkdir -p "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}" 2>/dev/null
           if [ -d "/workdir/bin" ]; then
             sudo chown -R $USER:$GROUPS /workdir/bin
-            rm -rf   "$GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/packages" 2>/dev/null
-            rm -rf   "$GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/luci" 2>/dev/null
-            rm -rf   "$GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/special" 2>/dev/null
-            mkdir -p "$GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/" 2>/dev/null
+            rm -rf   "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/packages" 2>/dev/null
+            rm -rf   "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/luci" 2>/dev/null
+            rm -rf   "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/special" 2>/dev/null
+            mkdir -p "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/" 2>/dev/null
             for FEED in $EXTRA_FEEDS $SPECIAL_FEEDS; do
               feed=$(cut -f2 -d'|' <<< "$FEED")
-              if [ -d "/workdir/bin/packages/$ARCH/$feed" ]; then
-                echo "cp /workdir/bin/packages/$ARCH/$feed to $GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/${feed/$PREFIX/}"
-                cp -Rf "/workdir/bin/packages/$ARCH/$feed" "$GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/${feed/$PREFIX/}"
-                pushd "$GITHUB_WORKSPACE/$TPATH/$BRANCH/packages/$ARCH/${feed/$PREFIX/}"; sign_packages; popd
+              if [ -d "/workdir/bin/packages/${{ inputs.ARCH }}/$feed" ]; then
+                echo "cp /workdir/bin/packages/${{ inputs.ARCH }}/$feed to $GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/${feed/$FTSPKGPREFIX/}"
+                cp -Rf "/workdir/bin/packages/${{ inputs.ARCH }}/$feed" "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/${feed/$FTSPKGPREFIX/}"
+                pushd "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/${feed/$FTSPKGPREFIX/}"; clean_old_apk; sign_packages; popd
               fi
             done
             #
-            pushd "$GITHUB_WORKSPACE/$TPATH/$BRANCH"
+            pushd "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH"
             echo "$USIGN_PUBKEY" > ${USIGN_ID,,}.pub
           cat <<- EOF > ${USIGN_ID,,}.sh
           #!/bin/sh
@@ -348,22 +447,22 @@ jobs:
             rm -rf /workdir/bin/targets 2>/dev/null
           fi
 
-      - name: Display structure of downloaded files (${{ env.BRANCH }}, ${{ env.ARCH }})
+      - name: Display structure of downloaded files (${{ env.BRANCH }}, ${{ inputs.ARCH }})
         if: ${{ steps.checkout_packags.outcome == 'success' || steps.checkout_releases.outcome == 'success' }}
         run: ls -R
         working-directory: /workdir/bin/packages/
 
       - name: Determine packages be installed
-        if: inputs.no_img == 0 && (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_imgs') && !cancelled()
+        if: env.build_mode == 'build_imgs' && !cancelled()
         shell: bash
         run: |
           INSTALLS=$(cat "$GITHUB_WORKSPACE/.github/workflows/prebuildpackages/generic" | tr '\n' ' ')
-          INSTALLS=${INSTALLS:+$INSTALLS }$(cat "$GITHUB_WORKSPACE/.github/workflows/prebuildpackages/$ARCH" 2>/dev/null | tr '\n' ' ')
-          echo "Installing $INSTALLS"
+          INSTALLS=${INSTALLS:+$INSTALLS }$(cat "$GITHUB_WORKSPACE/.github/workflows/prebuildpackages/${{ inputs.ARCH }}" 2>/dev/null | tr '\n' ' ')
+          echo "Installing: $INSTALLS"
           echo "INSTALLS=$INSTALLS" >> $GITHUB_ENV
 
       - name: Gen KEY_VERIFY
-        if: inputs.no_img == 0 && (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_imgs') && !cancelled()
+        if: env.build_mode == 'build_imgs' && !cancelled()
         shell: bash
         run: |
           KEY_VERIFY=''
@@ -375,17 +474,17 @@ jobs:
           echo "KEY_VERIFY=$KEY_VERIFY" >> $GITHUB_ENV
 
       - name: Build Images
-        if: inputs.no_img == 0 && (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_imgs') && !cancelled()
-        uses: fantastic-packages/gh-action-imagebuilder@master
+        if: env.build_mode == 'build_imgs' && !cancelled()
+        uses: fantastic-packages/gh-action-imagebuilder@24.10
         env:
-          ARCH: ${{ env.TARGET }}-${{ env.SUBTARGET }}-${{ env.VERSION }}
-          PROFILE: ${{ env.PROFILE }}
+          ARCH: ${{ inputs.BOARD }}-${{ inputs.SUBTARGET }}-${{ env.OP_VERSION }}
+          PROFILE: ${{ inputs.MODEL }}
           ARTIFACTS_DIR: /workdir
-          REPO_DIR: /workdir/bin/packages/${{ env.ARCH }}
+          REPO_DIR: /workdir/bin/packages/${{ inputs.ARCH }}
           EXTRA_REPOS: >-
-            src|${{ env.PREFIX }}packages|file:///repo/${{ env.PREFIX }}packages
-            src|${{ env.PREFIX }}luci|file:///repo/${{ env.PREFIX }}luci
-            src|${{ env.PREFIX }}special|file:///repo/${{ env.PREFIX }}special
+            src|${{ env.FTSPKGPREFIX }}packages|file:///repo/${{ env.FTSPKGPREFIX }}packages
+            src|${{ env.FTSPKGPREFIX }}luci|file:///repo/${{ env.FTSPKGPREFIX }}luci
+            src|${{ env.FTSPKGPREFIX }}special|file:///repo/${{ env.FTSPKGPREFIX }}special
           NO_LOCAL_REPOS: 1
           KEY_BUILD: ${{ env.USIGN_KEY }}
           KEY_BUILD_PUB: ${{ env.USIGN_PUBKEY }}
@@ -395,15 +494,15 @@ jobs:
 
       - name: Checkout Images
         shell: bash
-        if: inputs.no_img == 0 && (inputs.build_mode == 0 || inputs.build_mode == 'build_pkgs_and_imgs' || inputs.build_mode == 'build_imgs') && !cancelled()
+        if: env.build_mode == 'build_imgs' && !cancelled()
         run: |
           if [ -d "/workdir/bin" ]; then
             sudo chown -R $USER:$GROUPS /workdir/bin
-            rm -rf   "$GITHUB_WORKSPACE/$TPATH/$BRANCH/targets/$TARGET/$SUBTARGET" 2>/dev/null
-            mkdir -p "$GITHUB_WORKSPACE/$TPATH/$BRANCH/targets/$TARGET/" 2>/dev/null
-            echo "mv /workdir/bin/targets/$TARGET/$SUBTARGET to $GITHUB_WORKSPACE/$TPATH/$BRANCH/targets/$TARGET/$SUBTARGET"
-            mv -f "/workdir/bin/targets/$TARGET/$SUBTARGET" "$GITHUB_WORKSPACE/$TPATH/$BRANCH/targets/$TARGET/$SUBTARGET"
-            pushd "$GITHUB_WORKSPACE/$TPATH/$BRANCH/targets/$TARGET/$SUBTARGET"
+            rm -rf   "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/${{ inputs.BOARD }}/${{ inputs.SUBTARGET }}" 2>/dev/null
+            mkdir -p "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/${{ inputs.BOARD }}/" 2>/dev/null
+            echo "mv /workdir/bin/targets/${{ inputs.BOARD }}/${{ inputs.SUBTARGET }} to $GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/${{ inputs.BOARD }}/${{ inputs.SUBTARGET }}"
+            mv -f "/workdir/bin/targets/${{ inputs.BOARD }}/${{ inputs.SUBTARGET }}" "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/${{ inputs.BOARD }}/${{ inputs.SUBTARGET }}"
+            pushd "$GITHUB_WORKSPACE/${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/${{ inputs.BOARD }}/${{ inputs.SUBTARGET }}"
             if [ "${{env.GPG_SIGN}}" == "true" ]; then
               gpg -u ${GPG_ID} --batch --pinentry-mode=loopback --yes --passphrase "$(echo -n "${GPG_PW}")" -a -o sha256sums.asc --detach-sign sha256sums
             fi
@@ -412,26 +511,27 @@ jobs:
 
       - name: Generate artifact name and clean up irrelevant packages
         run: |
-          echo "artifact=OpenWRT-Build-$VERSION-$ARCH-$TARGET-$SUBTARGET-$PROFILE" >> $GITHUB_ENV
-          find $TPATH/* -maxdepth 0 2>/dev/null | grep -v "$BRANCH" | xargs -I{} rm -rf "{}"
-          find $TPATH/$BRANCH/packages/* -maxdepth 0 2>/dev/null | grep -v "$ARCH" | xargs -I{} rm -rf "{}"
-          find $TPATH/$BRANCH/targets/* -maxdepth 0 2>/dev/null | grep -v "$TARGET" | xargs -I{} rm -rf "{}"
-          find $TPATH/$BRANCH/targets/$TARGET/* -maxdepth 0 2>/dev/null | grep -v "$SUBTARGET" | xargs -I{} rm -rf "{}"
+          echo "artifact=OpenWRT-Build-${{ env.OP_VERSION }}-${{ inputs.ARCH }}-${{ inputs.BOARD }}-${{ inputs.SUBTARGET }}-${{ inputs.MODEL }}" >> $GITHUB_ENV
+          find ${{ inputs.GHPAGES_PATH }}/* -maxdepth 0 2>/dev/null | grep -v "$BRANCH" | xargs -I{} rm -rf "{}"
+          find ${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/* -maxdepth 0 2>/dev/null | grep -v "${{ inputs.ARCH }}" | xargs -I{} rm -rf "{}"
+          find ${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/* -maxdepth 0 2>/dev/null | grep -v "${{ inputs.BOARD }}" | xargs -I{} rm -rf "{}"
+          find ${{ inputs.GHPAGES_PATH }}/$BRANCH/targets/${{ inputs.BOARD }}/* -maxdepth 0 2>/dev/null | grep -v "${{ inputs.SUBTARGET }}" | xargs -I{} rm -rf "{}"
 
-      - name: Display structure of upload files (${{ env.VERSION }}, ${{ env.ARCH }}, ${{ env.TARGET }}-${{ env.SUBTARGET }})
+      - name: Display structure of upload files (${{ env.OP_VERSION }}, ${{ inputs.ARCH }}, ${{ inputs.BOARD }}-${{ inputs.SUBTARGET }})
         run: ls -R
-        working-directory: ${{ env.TPATH }}/
+        working-directory: ${{ inputs.GHPAGES_PATH }}/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.artifact }}
           path: |
-            ${{ env.TPATH }}/
+            ${{ inputs.GHPAGES_PATH }}/
           retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
 
-      - name: Fix permissions of DL
+      - name: Fix permissions of FEEDS/DL
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          sudo chmod -R o+r /workdir/FEEDS/
           sudo chmod -R o+r /workdir/DL/

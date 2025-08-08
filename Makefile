@@ -1,16 +1,14 @@
+# SPDX-License-Identifier: GPL-3
 #
-# Copyright (C) 2023 muink
-#
-# This is free software, licensed under the GNU General Public License v3.
-# See /LICENSE for more information.
-#
+# Copyright (C) 2023-2024 muink <https://github.com/muink>
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fantastic-packages
 PKG_VERSION:=1.0
 PKG_RELEASE:=20230428
 
-PKG_MAINTAINER:=muink <hukk1996@gmail.com>
+PKG_MAINTAINER:=Anya Lin <hukk1996@gmail.com>
 PKG_LICENSE:=GPL-3
 PKG_LICENSE_FILES:=LICENSE
 
@@ -29,10 +27,11 @@ define Package/$(PKG_NAME)-packages
 	$(call Package/$(PKG_NAME)/Default)
 	DEPENDS+:=\
 		+alwaysonline \
-		+chinadns-ng \
 		+einat-ebpf \
 		+fantastic-keyring \
 		+fantastic-packages-feeds \
+		+fakehttp \
+		+fastfetch \
 		+go-stun \
 		+internet-detector \
 		+mihomo \
@@ -40,8 +39,6 @@ define Package/$(PKG_NAME)-packages
 		+natter \
 		+netdata-ssl \
 		+pcap-dnsproxy \
-		+php-nginx \
-		+plain-nginx \
 		+rgmac \
 		+shadowsocks-rust \
 		+speedtest-go \
@@ -62,6 +59,7 @@ define Package/$(PKG_NAME)-luci
 		+luci-app-disks-info \
 		+luci-app-dnsproxy \
 		+luci-app-einat \
+		+luci-app-fakehttp \
 		+luci-app-fchomo \
 		+luci-app-interfaces-statistics \
 		+luci-app-internet-detector \
@@ -79,19 +77,18 @@ define Package/$(PKG_NAME)-luci
 		+luci-app-tinyfilemanager \
 		+luci-app-tn-netports \
 		+luci-app-xray \
-		+luci-app-xray-status \
-		+luci-theme-argon \
-		+luci-app-argon-config
+		+luci-app-xray-status
 endef
 
 define Package/$(PKG_NAME)
 	$(call Package/$(PKG_NAME)/Default)
 	DEPENDS+:=\
 		+alwaysonline \
-		+chinadns-ng \
 		+einat-ebpf \
 		+fantastic-keyring \
 		+fantastic-packages-feeds \
+		+fakehttp \
+		+fastfetch \
 		+go-stun \
 		+internet-detector \
 		+mihomo \
@@ -99,8 +96,6 @@ define Package/$(PKG_NAME)
 		+natter \
 		+netdata-ssl \
 		+pcap-dnsproxy \
-		+php-nginx \
-		+plain-nginx \
 		+rgmac \
 		+shadowsocks-rust \
 		+speedtest-go \
@@ -133,9 +128,7 @@ define Package/$(PKG_NAME)
 		+luci-app-tinyfilemanager \
 		+luci-app-tn-netports \
 		+luci-app-xray \
-		+luci-app-xray-status \
-		+luci-theme-argon \
-		+luci-app-argon-config
+		+luci-app-xray-status
 endef
 
 define Build/Configure

@@ -1,3 +1,9 @@
+[submodule "packages/fantastic-keyring"]
+	path = packages/fantastic-keyring
+	url = https://github.com/fantastic-packages/fantastic-keyring.git
+[submodule "packages/fantastic-packages-feeds"]
+	path = packages/fantastic-packages-feeds
+	url = https://github.com/fantastic-packages/fantastic-packages-feeds.git
 [submodule "luci/luci-app-tinyfilemanager"]
 	path = luci/luci-app-tinyfilemanager
 	url = https://github.com/muink/luci-app-tinyfilemanager.git
@@ -91,9 +97,6 @@
 [submodule "packages/openwrt-Toolkit"]
 	path = packages/openwrt-Toolkit
 	url = https://github.com/muink/openwrt-Toolkit.git
-[submodule "packages/openwrt-chinadns-ng"]
-	path = packages/openwrt-chinadns-ng
-	url = https://github.com/muink/openwrt-chinadns-ng.git
 [submodule "luci/luci-app-dnsproxy"]
 	path = luci/luci-app-dnsproxy
 	url = https://github.com/muink/luci-app-dnsproxy.git
@@ -109,9 +112,6 @@
 [submodule "packages/openwrt-speedtest-go"]
 	path = packages/openwrt-speedtest-go
 	url = https://github.com/muink/openwrt-speedtest-go.git
-[submodule "luci/luci-app-homeproxy"]
-	path = luci/luci-app-homeproxy
-	url = https://github.com/muink/luci-app-homeproxy.git
 [submodule "packages/openwrt-einat-ebpf"]
 	path = packages/openwrt-einat-ebpf
 	url = https://github.com/muink/openwrt-einat-ebpf.git
@@ -126,4 +126,13 @@
 	url = https://github.com/muink/luci-app-ssrust.git
 [submodule "packages/openwrt-fchomo"]
 	path = packages/openwrt-fchomo
-	url = https://github.com/muink/openwrt-fchomo.git
+	url = https://github.com/fcshark-org/openwrt-fchomo.git
+[submodule "packages/openwrt-fastfetch"]
+	path = packages/openwrt-fastfetch
+	url = https://github.com/muink/openwrt-fastfetch.git
+[submodule "packages/openwrt-fakehttp"]
+	path = packages/openwrt-fakehttp
+	url = https://github.com/yingziwu/openwrt-fakehttp.git
+[submodule "luci/luci-app-fakehttp"]
+	path = luci/luci-app-fakehttp
+	url = https://github.com/yingziwu/luci-app-fakehttp.git

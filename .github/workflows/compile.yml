@@ -247,9 +247,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt -y install axel
-          echo "here"
-          echo "https://codeload.github.com/${{ github.repository }}/releases/tar.gz/refs/heads/$Branch"
-          axel -q -n8 -o releases.tgz "https://codeload.github.com/${{ github.repository }}/releases/tar.gz/refs/heads/$Branch"
+          echo "https://codeload.github.com/$GITHUB_REPOSITORY_OWNER/releases/tar.gz/refs/heads/$Branch"
+          axel -q -n8 -o releases.tgz "https://codeload.github.com/$GITHUB_REPOSITORY_OWNER/releases/tar.gz/refs/heads/$Branch"
           tar -xzf releases.tgz releases-$Branch/$BRANCH/packages/${{ inputs.ARCH }}/ && mv releases-$Branch ${{ inputs.GHPAGES_PATH }} || echo
           echo "mv ${{ inputs.GHPAGES_PATH }}/$BRANCH/packages/${{ inputs.ARCH }}/<feeds> to /workdir/bin/packages/${{ inputs.ARCH }}/${FTSPKGPREFIX}<feeds>"
           mkdir -p "/workdir/bin/packages/${{ inputs.ARCH }}" 2>/dev/null

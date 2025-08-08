@@ -37,16 +37,12 @@ jobs:
     strategy:
       matrix:
         version: [24.10.1]
-        arch_packages:
-          - aarch64_cortex-a72
-          - aarch64_generic
+        arch_packages: [aarch64_cortex-a72]
         include:
           - usign_id: ${{ vars.USIGN_ID }}
           - gpg_id: ${{ vars.GPG_ID }}
           - arch_packages: aarch64_cortex-a72
             target: ['bcm27xx', 'bcm2711']
-          - arch_packages: aarch64_generic
-            target: ['armsr', 'armv8']
     uses: ./.github/workflows/compile.yml
     with:
       compiles: ${{ inputs.compile_packages }}
